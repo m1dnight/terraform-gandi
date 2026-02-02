@@ -295,14 +295,23 @@ locals {
         "cloud.loomy.be.",
       ]
     }
-    notifications_development_cname = {
+    # notifications_development_cname = {
+    #   name = "notifications.development"
+    #   type = "CNAME"
+    #   ttl  = 10800
+    #   values = [
+    #     "development.loomy.be.",
+    #   ]
+    # }
+    notifications_development_a = {
       name = "notifications.development"
-      type = "CNAME"
-      ttl  = 10800
+      type = "A"
+      ttl  = 300
       values = [
-        "development.loomy.be.",
+        data.external.public_ip.result.ip,
       ]
     }
+
     plausible_cname = {
       name = "plausible"
       type = "CNAME"
