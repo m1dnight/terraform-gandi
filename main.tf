@@ -45,6 +45,20 @@ variable "subdomains" {
 }
 
 # Set all the subdomains
+variable "a_record_subdomains" {
+  type    = set(string)
+  default = ["matrix", "element", "admin"]
+}
+
+resource "gandi_livedns_record" "a_subdomains" {
+  for_each = var.a_record_subdomains
+  zone     = "call-cc.io"
+  name     = each.value
+  type     = "A"
+  ttl      = 300
+  values   = ["34.116.176.4"]
+}
+
 resource "gandi_livedns_record" "cname_subdomains" {
   for_each = var.subdomains
   zone     = "call-cc.io"
