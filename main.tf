@@ -47,7 +47,7 @@ variable "subdomains" {
 # Set all the subdomains
 variable "a_record_subdomains" {
   type    = set(string)
-  default = ["matrix", "element", "admin"]
+  default = []
 }
 
 resource "gandi_livedns_record" "a_subdomains" {
@@ -56,7 +56,7 @@ resource "gandi_livedns_record" "a_subdomains" {
   name     = each.value
   type     = "A"
   ttl      = 300
-  values   = ["34.116.176.4"]
+  values   = ["141.134.26.23"]
 }
 
 resource "gandi_livedns_record" "cname_subdomains" {
