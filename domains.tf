@@ -69,6 +69,54 @@ locals {
       }
     }
 
+    "christophedetroyer.be" = {
+      # Firebase Hosting
+      ip = "141.134.26.23"
+
+      a = {
+        "@" = { ttl = 1080 }
+
+        # Catch-all for every service hostname, public (image.call-cc.be)
+        # and internal (grafana.internal.call-cc.be) alike — the wildcard
+        # matches multiple labels. The public/internal split is enforced by
+        # the reverse proxy: hosts under .internal get LAN-only IP rules.
+        "*" = { ttl = 1080 }
+      }
+
+      # Gandi mail
+      mx = {
+        "@" = { ttl = 10800, values = [
+          "10 spool.mail.gandi.net.",
+          "50 fb.mail.gandi.net.",
+        ] }
+      }
+
+      txt = {
+        "@" = { ttl = 10800, values = ["\"v=spf1 include:_mailcust.gandi.net ?all\""] }
+
+        # The live zone also holds an _acme-challenge TXT record: a transient
+        # Let's Encrypt DNS-01 token written by the ACME client. Deliberately
+        # unmanaged so terraform doesn't fight it.
+      }
+
+      # Gandi mail service discovery (RFC 6186)
+      srv = {
+        "_imap._tcp"       = { ttl = 10800, values = ["0 0 0 ."] }
+        "_imaps._tcp"      = { ttl = 10800, values = ["0 1 993 mail.gandi.net."] }
+        "_pop3._tcp"       = { ttl = 10800, values = ["0 0 0 ."] }
+        "_pop3s._tcp"      = { ttl = 10800, values = ["10 1 995 mail.gandi.net."] }
+        "_submission._tcp" = { ttl = 10800, values = ["0 1 465 mail.gandi.net."] }
+      }
+
+      cname = {
+        # Gandi mail
+        "gm1._domainkey" = { ttl = 1200, value = "gm1.gandimail.net." }
+        "gm2._domainkey" = { ttl = 1200, value = "gm2.gandimail.net." }
+        "gm3._domainkey" = { ttl = 1200, value = "gm3.gandimail.net." }
+        "webmail"        = { ttl = 10800, value = "webmail.gandi.net." }
+      }
+    }
+
     "genserver.be" = {
       # Gandi web forwarding (webredir), not the homelab IP
       ip = "141.134.26.23"
